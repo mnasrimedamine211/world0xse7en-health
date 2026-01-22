@@ -52,15 +52,15 @@ export const AdminDashboard = () => {
         <p className="text-muted-foreground mt-2">System overview and analytics</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <CardTitle className="text-base md:text-sm lg:text-sm">Total Users</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.totalUsers || 0}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {stats?.totalPatients || 0} patients, {stats?.totalDoctors || 0} doctors
             </p>
           </CardContent>
@@ -73,7 +73,7 @@ export const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.totalAppointments || 0}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {stats?.pendingAppointments || 0} pending
             </p>
           </CardContent>
@@ -86,7 +86,7 @@ export const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.totalAnalyses || 0}</div>
-            <p className="text-xs text-muted-foreground">Total AI analyses</p>
+            <p className="text-sm text-muted-foreground">Total AI analyses</p>
           </CardContent>
         </Card>
 
@@ -97,7 +97,7 @@ export const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.pendingAppointments || 0}</div>
-            <p className="text-xs text-muted-foreground">Pending appointments</p>
+            <p className="text-sm text-muted-foreground">Pending appointments</p>
           </CardContent>
         </Card>
       </div>
@@ -140,7 +140,7 @@ export const AdminDashboard = () => {
             ) : (
               <div className="space-y-3">
                 {recentAppointments.map((appointment) => (
-                  <div key={appointment._id} className="flex justify-between items-center p-3 border rounded-lg">
+                  <div key={appointment._id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 border rounded-lg">
                     <div>
                       <p className="font-medium">
                         {appointment.patient?.name || 'Unknown Patient'}
@@ -148,11 +148,11 @@ export const AdminDashboard = () => {
                       <p className="text-sm text-muted-foreground">
                         {appointment.doctor?.name || 'Unknown Doctor'}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground">
                         {format(new Date(appointment.appointmentDate), 'MMM dd, yyyy')} at {appointment.appointmentTime}
                       </p>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    <span className={`px-2 py-1 rounded-full text-sm font-medium ${
                       appointment.status === 'confirmed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
                       appointment.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
                       appointment.status === 'completed' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :

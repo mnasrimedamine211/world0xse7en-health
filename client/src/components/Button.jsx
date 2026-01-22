@@ -1,12 +1,13 @@
 import { cn } from '../utils/cn';
 
-export const Button = ({ 
-  children, 
-  variant = 'default', 
-  size = 'default', 
-  className, 
+export const Button = ({
+  children,
+  variant = 'default',
+  size = 'default',
+  className,
   disabled,
-  ...props 
+  ariaLabel,
+  ...props
 }) => {
   const variants = {
     default: 'bg-primary text-primary-foreground hover:bg-primary/90',
@@ -23,8 +24,15 @@ export const Button = ({
     icon: 'h-10 w-10',
   };
 
+  if (size === 'icon' && !ariaLabel) {
+    console.warn(
+      'Icon-only buttons should have an ariaLabel for accessibility.'
+    );
+  }
+
   return (
     <button
+      type={props.type || 'button'}
       className={cn(
         'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
         variants[variant],
@@ -32,10 +40,10 @@ export const Button = ({
         className
       )}
       disabled={disabled}
+      aria-label={ariaLabel}
       {...props}
     >
       {children}
     </button>
   );
 };
-
