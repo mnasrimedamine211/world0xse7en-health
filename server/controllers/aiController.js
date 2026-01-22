@@ -28,50 +28,36 @@ const callAIAPI = async (symptoms) => {
       }
     );
 
-    const aiResponse = response.data.choices[0].message.content;
-    
-    // Try to parse JSON response
-    let parsedResponse;
-    try {
-      parsedResponse = JSON.parse(aiResponse);
-    } catch (e) {
-      // If not JSON, create structured response
-      parsedResponse = {
-        possibleDiagnosis: [{
-          condition: 'General Assessment',
-          probability: 0.5,
-          description: aiResponse
-        }],
-        severity: 'medium',
-        recommendedActions: ['Consult with a healthcare professional', 'Monitor symptoms'],
-        notes: aiResponse,
-        confidence: 60
-      };
-    }
+    const aiRaw = response.data.choices[0].message.content;
+    const aiResponse = parseAIResponse(aiRaw);
 
-    return parsedResponse;
+    return aiResponse;
+
   } catch (error) {
     console.error('AI API Error:', error.message);
-    // Fallback response
-    return {
+    return parseAIResponse({
       possibleDiagnosis: [{
         condition: 'Unable to analyze',
         probability: 0,
-        description: 'AI service is currently unavailable. Please consult with a healthcare professional.'
+        description: 'AI service is currently unavailable.'
       }],
       severity: 'medium',
       recommendedActions: ['Consult with a healthcare professional'],
-      notes: 'AI analysis unavailable. Please seek professional medical advice.',
+      notes: 'AI analysis unavailable.',
       confidence: 0
-    };
+    });
   }
 };
+
 
 const analyzeSymptoms = async (req, res, next) => {
   try {
     const { symptoms } = req.body;
+      if (!symptoms || symptoms.trim() === '') {
+      return res.status(400).json({ message: 'Symptoms are required' });
+    }
     const userId = req.user.id;
-
+    
     // Call AI API
     const aiResponse = await callAIAPI(symptoms);
 
