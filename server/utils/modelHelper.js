@@ -65,6 +65,23 @@ const findUserWithPassword = async (query) => {
   }
 };
 
+
+// Cache for dashboard stats
+const statsCache = {
+  data: null,
+  timestamp: null,
+  TTL: 5 * 60 * 1000 
+};
+
+const isCacheValid = () => {
+  if (!statsCache.data || !statsCache.timestamp) return false;
+  return (Date.now() - statsCache.timestamp) < statsCache.TTL;
+};
+const clearStatsCache = () => {
+  statsCache.data = null;
+  statsCache.timestamp = null;
+};
+
 module.exports = {
   getUserModel,
   getAppointmentModel,
@@ -72,6 +89,9 @@ module.exports = {
   getAIAnalysisModel,
   populateReference,
   populateReferences,
-  findUserWithPassword
+  findUserWithPassword ,
+  statsCache,
+  isCacheValid,
+  clearStatsCache
 };
 

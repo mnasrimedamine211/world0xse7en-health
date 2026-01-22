@@ -1,4 +1,6 @@
-const { getUserModel, getAppointmentModel, getAIAnalysisModel, getReportModel } = require('../utils/modelHelper.js');
+const { getUserModel, getAppointmentModel, getAIAnalysisModel, getReportModel , statsCache,
+  isCacheValid,
+  clearStatsCache } = require('../utils/modelHelper.js');
 
 const getUsers = async (req, res, next) => {
   try {
@@ -89,7 +91,7 @@ const updateUser = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
+    clearStatsCache();
     res.json({
       success: true,
       user
@@ -113,7 +115,7 @@ const deleteUser = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
+    clearStatsCache();
     res.json({
       success: true,
       message: 'User deleted'
@@ -125,6 +127,9 @@ const deleteUser = async (req, res, next) => {
 
 const getDashboardStats = async (req, res, next) => {
   try {
+      if (isCacheValid()) {
+      return res.json({ success: true, stats: statsCache.data, cached: true });
+    }
     const userId = req.user.id;
     const role = req.user.role;
 
@@ -186,7 +191,8 @@ const getDashboardStats = async (req, res, next) => {
         myAnalyses
       };
     }
-
+        statsCache.data = stats;
+    statsCache.timestamp = Date.now();
     res.json({
       success: true,
       stats
